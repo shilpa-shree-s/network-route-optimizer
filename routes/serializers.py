@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Node, Edge, RouteQuery
+from .models import Node, Edge
 
 
 class NodeSerializer(serializers.ModelSerializer):
@@ -32,3 +32,7 @@ class EdgeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("This edge already exists.")
 
         return data
+
+class ShortestRouteSerializer(serializers.Serializer):
+    source = serializers.SlugRelatedField(slug_field="name", queryset=Node.objects.all())
+    destination = serializers.SlugRelatedField(slug_field="name", queryset=Node.objects.all())
