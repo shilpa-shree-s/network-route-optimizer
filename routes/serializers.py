@@ -13,3 +13,8 @@ class EdgeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Edge
         fields = ["id", "source", "destination", "latency"]
+        
+    def validate_latency(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("Latency must be greater than 0.")
+        return value
