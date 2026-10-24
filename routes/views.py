@@ -4,7 +4,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Edge, Node, RouteQuery
 
-from .serializers import NodeSerializer, EdgeSerializer, ShortestRouteSerializer
+from .serializers import (
+    NodeSerializer,
+    EdgeSerializer,
+    ShortestRouteSerializer,
+    RouteQuerySerializer,
+)
+
 from .route_finder import find_shortest_route
 
 def build_graph():
@@ -65,3 +71,18 @@ class ShortestRouteView(APIView):
             {"total_latency": total_latency, "path": path},
             status=status.HTTP_200_OK,
         )
+
+class RouteHistoryView(APIView):
+    def get(self, request):
+        queryset = RouteQuery.objects.all()  # newest first (set in the model)
+
+        source = request.query_params.get("source")
+        destination = request.query_params.get("destination")
+
+        if source:
+            queryset = queryset.filter(source=source)
+        if destination:
+            queryset = queryset.filter(destination=destination)
+
+        serializer = RouteQuerySerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

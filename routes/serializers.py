@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Node, Edge
+from .models import Node, Edge, RouteQuery
 
 
 class NodeSerializer(serializers.ModelSerializer):
@@ -36,3 +36,8 @@ class EdgeSerializer(serializers.ModelSerializer):
 class ShortestRouteSerializer(serializers.Serializer):
     source = serializers.SlugRelatedField(slug_field="name", queryset=Node.objects.all())
     destination = serializers.SlugRelatedField(slug_field="name", queryset=Node.objects.all())
+
+class RouteQuerySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RouteQuery
+        fields = '__all__'
