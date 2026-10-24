@@ -2,6 +2,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from .models import Edge, Node
 
 from .serializers import NodeSerializer, EdgeSerializer
 
@@ -20,3 +21,14 @@ class EdgeCreateView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def build_graph():
+    # every server is a key, even ones with no connections
+    graph = {node.name: {} for node in Node.objects.all()}
+
+    for edge in Edge.objects.select_related("source", "destination"):
+        # connections are two-way, so adding both directions
+        graph[edge.source.name][edge.destination.name] = edge.latency
+        graph[edge.destination.name][edge.source.name] = edge.latency
+
+    return graph
