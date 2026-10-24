@@ -9,6 +9,7 @@ from .serializers import (
     EdgeSerializer,
     ShortestRouteSerializer,
     RouteQuerySerializer,
+    HistoryFilterSerializer,
 )
 
 from .route_finder import find_shortest_route
@@ -74,15 +75,23 @@ class ShortestRouteView(APIView):
 
 class RouteHistoryView(APIView):
     def get(self, request):
-        queryset = RouteQuery.objects.all()  # newest first (set in the model)
+        filters = HistoryFilterSerializer(data=request.query_params)
+        if not filters.is_valid():
+            return Response(filters.errors, status=status.HTTP_400_BAD_REQUEST)
+        params = filters.validated_data
 
-        source = request.query_params.get("source")
-        destination = request.query_params.get("destination")
+        queryset = RouteQuery.objects.all()
 
-        if source:
-            queryset = queryset.filter(source=source)
-        if destination:
-            queryset = queryset.filter(destination=destination)
+        if "source" in params:
+            queryset = queryset.filter(source=params["source"])
+        if "destination" in params:
+            queryset = queryset.filter(destination=params["destination"])
+        if "date_from" in params:
+            queryset = queryset.filter(created_at__gte=params["date_from"])
+        if "date_to" in params:
+            queryset = queryset.filter(created_at__lte=params["date_to"])
+        if "limit" in params:
+            queryset = queryset[: params["limit"]]
 
         serializer = RouteQuerySerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -41,3 +41,10 @@ class RouteQuerySerializer(serializers.ModelSerializer):
     class Meta:
         model = RouteQuery
         fields = '__all__'
+
+class HistoryFilterSerializer(serializers.Serializer):
+    source = serializers.CharField(required=False)
+    destination = serializers.CharField(required=False)
+    limit = serializers.IntegerField(required=False, min_value=1)
+    date_from = serializers.DateTimeField(required=False)
+    date_to = serializers.DateTimeField(required=False)
