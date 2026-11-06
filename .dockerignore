@@ -1,0 +1,38 @@
+# Virtual environments (Windows venv is useless inside a Linux container)
+venv/
+.venv/
+env/
+
+# Python cache and build files
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Local database and logs
+db.sqlite3
+*.sqlite3
+*.log
+
+# Secrets and local config
+.env
+.env.*
+
+# Git and editor files
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Docker files themselves
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node (for when a frontend lives nearby)
+node_modules/
