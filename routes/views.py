@@ -14,6 +14,12 @@ from .serializers import (
 
 from .route_finder import find_shortest_route
 
+
+class HealthView(APIView):
+    def get(self, request):
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
+
+
 def build_graph():
     # every server is a key, even ones with no connections
     graph = {node.name: {} for node in Node.objects.all()}

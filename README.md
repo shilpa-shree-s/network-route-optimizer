@@ -53,6 +53,7 @@ Tests run against a temporary database, so your real data is never touched.
 
 | Test file                       | What it covers                                                                  |
 | ------------------------------- | ------------------------------------------------------------------------------- |
+| `tests_health_api.py`         | `GET /health`: API availability                                               |
 | `tests_route_finder.py`       | Shortest-route logic on plain dictionaries (no database)                        |
 | `tests_nodes_api.py`          | `POST /nodes`: success, missing name, duplicate name                          |
 | `tests_edges_api.py`          | `POST /edges`: success, missing fields, bad latency, unknown node, duplicates |
@@ -63,6 +64,7 @@ Tests run against a temporary database, so your real data is never touched.
 
 | Method | Endpoint             | Purpose                                 |
 | ------ | -------------------- | --------------------------------------- |
+| GET    | `/health`          | Check that the API is responding         |
 | POST   | `/nodes`           | Add a server                            |
 | POST   | `/edges`           | Connect two servers with a latency      |
 | POST   | `/routes/shortest` | Find the lowest-latency route           |

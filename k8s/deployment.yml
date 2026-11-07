@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: route-optimizer
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+  spec:
+    containers:
+      - name: backend
+        image: route-optimizer:v1.0
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 8000
+        envFrom:
+          - secretRef:
+              backen-env
+            

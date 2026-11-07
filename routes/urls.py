@@ -4,12 +4,14 @@ from .views import (
     EdgeCreateView,
     ShortestRouteView,
     RouteHistoryView,
+    HealthView,
 )
 
 app_name = "routes"
 
 
 urlpatterns = [
+    path("health", HealthView.as_view(), name="health"),
     path("nodes", NodeCreateView.as_view(), name="node-create"),
     path("edges", EdgeCreateView.as_view(), name="edge-create"),
     path("routes/shortest", ShortestRouteView.as_view(), name="route-shortest"),

@@ -11,10 +11,27 @@ URLs have **no trailing slash**: use `/nodes`, not `/nodes/`.
 
 | Method | Endpoint             | Success | Errors           |
 | ------ | -------------------- | ------- | ---------------- |
+| GET    | `/health`          | `200` |                  |
 | POST   | `/nodes`           | `201` | `400`          |
 | POST   | `/edges`           | `201` | `400`          |
 | POST   | `/routes/shortest` | `200` | `400`, `404` |
 | GET    | `/routes/history`  | `200` | `400`          |
+
+---
+
+## Health Check
+
+**GET** `/health`
+
+Confirms that the API process is responding.
+
+### Success: `200 OK`
+
+```json
+{
+  "status": "ok"
+}
+```
 
 ---
 
