@@ -6,7 +6,12 @@ metadata:
   labels:
     app: backend
 spec:
-  replicas: 1
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
       app: backend
@@ -14,14 +19,39 @@ spec:
     metadata:
       labels:
         app: backend
-  spec:
-    containers:
-      - name: backend
-        image: route-optimizer:v1.0
-        imagePullPolicy: Never
-        ports:
-          - containerPort: 8000
-        envFrom:
-          - secretRef:
-              backen-env
-            
+    spec:
+      containers:
+        - name: backend
+          image: route-optimizer:v1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: backend-env
+          resources:
+            requests:
+              cpu: 100m
+              memory: 125Mi
+            limits:
+              cpu: 500m
+              memory: 500Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: localhost      
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 3
