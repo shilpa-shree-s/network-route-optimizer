@@ -45,3 +45,5 @@ class LoginUser(APIView):
             "refresh token": str(refresh),
             "acces token": str(refresh.access_token),
         })
+
+# class ProfileViews(APIView):
