@@ -3,7 +3,8 @@ from django.contrib.auth import authenticate
 #Serializers Import
 from .serializers import (
     RegisterSerializer,
-    LoginUserSerializer
+    LoginUserSerializer,
+    LogoutSerializer
 )
 
 from rest_framework import status
@@ -14,6 +15,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 #permissions Import
 from rest_framework.permissions import(
     AllowAny,
+    IsAuthenticated
 )
 
 #parser
@@ -64,4 +66,15 @@ class LoginUser(APIView):
             "acces token": str(refresh.access_token),
         })
 
-# class ProfileViews(APIView):
+class LogoutView(APIView):
+    permission_classes=[IsAuthenticated]
+    parser_classes = [MultiPartParser,JSONParser,FormParser]
+
+    def post(self, request):
+        serializer=LogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {'message': 'Logged out successfully'},
+            status=status.HTTP_205_RESET_CONTENT,
+        )

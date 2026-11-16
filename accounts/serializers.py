@@ -6,6 +6,10 @@ from . models import Profile
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
+
+
 MAX_IMAGE_SIZE = 2 * 1024 * 1024   # 2 MB
 
 
@@ -61,5 +65,17 @@ class LoginUserSerializer(serializers.Serializer):
     username= serializers.CharField()
     password=serializers.CharField(write_only=True)
 
-class ProfieSerializer(serializers.ModelSerializer):
-    pass
+class LogoutSerializer(serializers.Serializer):
+    token = serializers.CharField()
+
+    def validate(self, attrs):
+        self.token=attrs['refresh']
+        return attrs
+
+    def save(self, **kwargs):
+        try:
+            RefreshToken(self.token).blacklist()
+        except TokenError:
+            raise serializers.ValidationError(
+                "Token is Invalid or already blacklisted"
+            )
