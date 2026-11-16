@@ -2,13 +2,12 @@ from django.contrib.auth import authenticate
 
 #Serializers Import
 from .serializers import (
-    RegisterUserSerializer,
+    RegisterSerializer,
     LoginUserSerializer
 )
 
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -17,11 +16,30 @@ from rest_framework.permissions import(
     AllowAny,
 )
 
-# Create your views here.
-class RegisterUser(CreateAPIView):
-    serializer_class=RegisterUserSerializer
-    permission_classes=[AllowAny]
+#parser
+from rest_framework.parsers import(
+    MultiPartParser,
+    JSONParser,
+    FormParser 
+)
 
+# Create your views here.
+class RegisterView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+    parser_classes = [MultiPartParser,JSONParser,FormParser]
+
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user=serializer.save()
+
+        return Response({
+            "message": "User created Successfully",
+            "user Id": user.id,
+            "User Name": user.username
+        }, status=status.HTTP_200_OK)
+    
 class LoginUser(APIView):
     def post(self ,request):
         serializer=LoginUserSerializer(data=request.data)
