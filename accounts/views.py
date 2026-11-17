@@ -25,6 +25,8 @@ from rest_framework.parsers import(
     FormParser 
 )
 
+from .tasks import send_welcome_email
+
 # Create your views here.
 class RegisterView(APIView):
     authentication_classes = []
@@ -36,6 +38,8 @@ class RegisterView(APIView):
         serializer.is_valid(raise_exception=True)
         user=serializer.save()
 
+        #celery
+        send_welcome_email.delay(user.id)
         return Response({
             "message": "User created Successfully",
             "user Id": user.id,

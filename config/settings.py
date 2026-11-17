@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from datetime import timedelta 
+from celery.schedules import crontab
 
 load_dotenv()
 
@@ -147,4 +148,39 @@ MAILERS = {
     'default': {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
+}
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER= 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+
+CELERY_BEAT_SCHEDULE = {
+
+    # 'task_every_30_sec': {
+    #     'task': 'accounts.tasks.demo_beat',
+    #     'schedule': 30.0,
+    # },
+
+    'task_every_30_mins': {
+        'task': 'accounts.tasks.demo_beat',
+        'schedule': crontab(minute='*/30'),
+    },
+
+    # 'task_every_1_half_hour': {
+    #     'task': 'accounts.tasks.demo_beat',
+    #     'schedule': 5400.0,
+    # },
+
+    # 'everyday_at_11pm': {
+    #     'task': 'accounts.tasks.demo_beat',
+    #     'schedule': crontab(hour=23, minute=0),
+    # },
+    'every_sunday_9am':{
+        'task': 'accounts.tasks.demo_beat',
+        'schedule': crontab(day_of_week=0, hour=9, minute=0),
+    }
 }
