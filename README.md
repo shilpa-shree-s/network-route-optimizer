@@ -1,4 +1,3 @@
-
 # Network Route Optimizer
 
 A REST API that stores servers (nodes) and the connections between them (edges), and finds the lowest-latency route between any two servers.
@@ -64,7 +63,7 @@ Tests run against a temporary database, so your real data is never touched.
 
 | Method | Endpoint             | Purpose                                 |
 | ------ | -------------------- | --------------------------------------- |
-| GET    | `/health`          | Check that the API is responding         |
+| GET    | `/health`          | Check that the API is responding        |
 | POST   | `/nodes`           | Add a server                            |
 | POST   | `/edges`           | Connect two servers with a latency      |
 | POST   | `/routes/shortest` | Find the lowest-latency route           |
@@ -154,3 +153,11 @@ network-route-optimizer/
 - Priority-queue version of the route finder for very large networks
 - Caching the graph, or frequently requested routes
 - Switching to MySQL or PostgreSQL for production
+
+{
+  "username": "john",
+  "email": "john@example.com",
+  "password": "Strong@12345",
+  "mobile_number": "9876543210",
+  "date_of_birth": "1998-05-14"
+}
